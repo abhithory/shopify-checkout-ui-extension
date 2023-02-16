@@ -7,6 +7,9 @@ extension_points = [
   'Checkout::Reductions::RenderBefore'
 ]
 
+[capabilities]
+network_access = true
+
 # [[metafields]]
 # namespace = "my-namespace"
 # key = "my-key"
