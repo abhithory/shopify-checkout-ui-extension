@@ -10,22 +10,21 @@ import {
   TextBlock,
   BlockLayout,
   View,
-  Heading
+  Heading,
+  BlockStack
 } from '@shopify/checkout-ui-extensions-react';
 
 
 
 render('Checkout::Reductions::RenderAfter', () => (
-  <AppDiscount />
+  <ApplyDiscount />
   ));
   
-  render('Checkout::Dynamic::Render[OrderSummary4]', () => (
+  
+  render('Checkout::Dynamic::Render', () => (
     <RewardFromOrder />
-));
-
-render('Checkout::Dynamic::Render [OrderSummary4]', () => (
-  <RewardFromOrder />
-));
+    ));
+    
 
 
 
@@ -34,6 +33,7 @@ function RewardFromOrder() {
   const [tokenUserWillGet, setTokenUserWillGet] = useState(55)
   return (
     <View border="base" padding="base">
+      <Heading>Use our Loyalty program for getting Discount</Heading>
       <Heading>Total Points you will get from this order: {tokenUserWillGet}</Heading>
       <Heading>Value of your tokens: ${tokenUserWillGet / 4}</Heading>
       <Text size="small">You get 1 token for order of $1</Text>
@@ -70,9 +70,10 @@ function ModelContent() {
 
 
 
-function AppDiscount() {
+function ApplyDiscount() {
   return (
-    <BlockLayout>
+    <BlockStack>
+        <Text size="medium">You have 55 YT points</Text>
       <Link
         overlay={
           <Modal padding title="Apply Discount with Loyaly points">
@@ -81,10 +82,10 @@ function AppDiscount() {
         }
       >
         <Button>
-          Apply Discount with Your token
+          Apply Discount with Yt Points
         </Button>
       </Link>
-    </BlockLayout>
+    </BlockStack>
   );
 }
 
