@@ -2,7 +2,10 @@ type = "checkout_ui_extension"
 name = "checkout-ui-buttton"
 
 extension_points = [
-  'Checkout::Reductions::RenderAfter'
+  'Checkout::Reductions::RenderAfter',
+  'Checkout::Reductions::RenderBefore',
+  'Checkout::Dynamic::Render[OrderSummary4]',
+  'Checkout::Dynamic::Render [OrderSummary4]'
 ]
 
 # [[metafields]]
