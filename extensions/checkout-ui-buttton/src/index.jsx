@@ -25,15 +25,28 @@ import {
 
 
 
+
+
+
 render('Checkout::Reductions::RenderAfter', () => (
   <ApplyDiscount />
-  ));
-  
-  
-  render('Checkout::Dynamic::Render', () => (
-    <RewardFromOrder />
-    ));
-    
+));
+
+
+render('Checkout::Dynamic::Render', () => (
+  <RewardFromOrder />
+));
+
+
+
+
+
+const getDataFromApi = async function () {
+  const response = await fetch('https://datausa.io/api/data?drilldowns=Nation&measures=Population');
+
+  const data = await response.json();
+  return data;
+}
 
 
 
@@ -49,42 +62,30 @@ function RewardFromOrder() {
   // const sessionToken = useSessionToken();
   // await sessionToken.get();
 
-  // const storageLocal = useStorage();
+  const storageLocal = useStorage();
   // await storageLocal.write("user","new user");
-  // await storageLocal.read("user");
 
-  const {shop} = useExtensionApi();
-  const [data, setData] = useState(null);
+  const { shop } = useExtensionApi();
 
-  
+
 
   useEffect(async () => {
 
-    console.log('===================new effect=================');
-    console.log(data);
-    console.log('====================================');
-  }, [data]);
-
-
-
-  useEffect(() => {
+    return 
     const getProductsQuery = {
-      query: `query ($first: Int!) {
-        products(first: $first) {
-          nodes {
-            id
-            title
+      query: `query {
+        appInstallation {
+          accessScopes {
+            handle
+            description
           }
         }
       }`,
-      variables: {first: 5},
     };
 
     const apiVersion = 'unstable';
-
     console.log(`${shop.storefrontUrl}api/${apiVersion}/graphql.json`);
-
-    fetch(
+    const response = await fetch(
       `${shop.storefrontUrl}api/${apiVersion}/graphql.json`,
       {
         method: 'POST',
@@ -94,27 +95,29 @@ function RewardFromOrder() {
         body: JSON.stringify(getProductsQuery),
       },
     )
-      .then((response) => {
 
-        console.log('====================================');
-        console.log("response");
-        console.log(response.body);
-        console.log('====================================');
-        return response.json()
-      })
-      .then(({data, errors}) => {
-        console.log('====================================');
-        console.log("data");
-        console.log(data);
-        console.log("errors");
-        console.log(errors);
-        console.log('====================================');
-        setData(data)
-      });
+    try {
+      console.log(response);
+      let data = await response.json();
+      console.log('====================================');
+      console.log("data");
+      console.log(data);
+      console.log('====================================');
+      
+    } catch (error) {
+      console.log('====================================');
+      console.log("error");
+      console.log(error);
+      console.log('====================================');
+    }
+
+
   }, [shop]);
-  
+
+
   return (
     <View border="base" padding="base">
+
       <Heading>Use our Loyalty program for getting Discount</Heading>
       <Heading>Total Points you will get from this order: {userTotalAmount?.amount}</Heading>
       <Heading>Value of your tokens: {userTotalAmount?.currencyCode}{tokenUserWillGet / 4}</Heading>
@@ -134,6 +137,7 @@ function ModelContent() {
   return (
     // <BlockLayout rows={[60, 'fill']}>
     <BlockLayout>
+      
       <View border="base" padding="base">
         <Heading>Total Points you have: {totalPointsUserHave}</Heading>
         <Heading>Total value of tokens: ${totalPointsUserHave / 4}</Heading>
@@ -152,21 +156,33 @@ function ModelContent() {
 
 
 
+
 function ApplyDiscount() {
+  const applyCoponCode = useApplyDiscountCodeChange(); // apply discount copons
+
+  
+const applyDiscountCode = async function(){
+  const disocuntToken = "YXG022NQJKB2";
+  console.log(await applyCoponCode({type: "addDiscountCode",code: disocuntToken}));  
+}
+
   return (
     <BlockStack>
-        <Text size="medium">You have 55 YT points</Text>
-      <Link
+      <Text size="medium">You have 55 YT points</Text>
+      {/* <Link
         overlay={
           <Modal padding title="Apply Discount with Loyaly points">
             <ModelContent />
           </Modal>
         }
-      >
-        <Button>
+      > */}
+        <Button onPress={applyDiscountCode}>
           Apply Discount with Yt Points
         </Button>
-      </Link>
+
+      <Text size="medium">Cutomize Discount</Text>
+
+      {/* </Link> */}
     </BlockStack>
   );
 }

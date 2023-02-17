@@ -1,0 +1,21 @@
+<span style="color: {{ block.settings.color }}">
+  <h1>App blocks let you build powerful integrations .</h1>
+</span>
+
+{% render "app_snippet" %}
+{% schema %}
+  {
+    "name": "Hello World",
+    "target": "section",
+    "stylesheet": "app.css",
+    "javascript": "app.js",
+    "settings": [
+      {
+        "label": "Color",
+        "id": "color",
+        "type": "color",
+        "default": "#000000"
+      }
+    ]
+  }
+{% endschema %}}}}
